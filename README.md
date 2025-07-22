@@ -1,4 +1,5 @@
 # Cache Wipe Chrome Extension
+# https://chromewebstore.google.com/detail/cache-wipe/mlfolhfffnjjldgphifngjabjlnhhmin?authuser=0&hl=en
 
 A one-click Chrome extension that instantly clears cache for the active tab.
 
