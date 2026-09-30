@@ -94,9 +94,9 @@
             <p>This data:</p>
             <ul>
                 <li>Never leaves your device</li>
-                <li>Is stored only in Chrome's local storage</li>
+                <li>Is stored using Chrome's storage API (<code>chrome.storage.sync</code>)</li>
                 <li>Can be cleared by uninstalling the extension</li>
-                <li>Is synced across your devices only if you have Chrome Sync enabled</li>
+                <li>Is synced across your devices by Chrome only if you have Chrome Sync enabled; the extension itself never transmits it</li>
             </ul>
         </div>
 
@@ -106,9 +106,8 @@
             
             <h3>Required Permissions:</h3>
             <ul>
-                <li><strong>activeTab</strong>: To identify which tab's cache to clear</li>
+                <li><strong>activeTab</strong>: To identify which tab's site to clear and reload it, only when you click the icon</li>
                 <li><strong>browsingData</strong>: To clear cache and cookies for the active tab</li>
-                <li><strong>tabs</strong>: To reload the tab after clearing cache</li>
                 <li><strong>storage</strong>: To save your preferences locally</li>
                 <li><strong>notifications</strong>: To show optional success/error messages</li>
                 <li><strong>contextMenus</strong>: To provide right-click settings options</li>
@@ -158,15 +157,6 @@
             </ul>
         </div>
 
-        <div class="section">
-            <h2>Compliance</h2>
-            <p>This privacy policy complies with:</p>
-            <ul>
-                <li>Chrome Web Store Developer Program Policies</li>
-                <li>General Data Protection Regulation (GDPR)</li>
-                <li>California Consumer Privacy Act (CCPA)</li>
-            </ul>
-        </div>
 
         <p style="margin-top: 40px; text-align: center; color: #666;">
             By using Cache Wipe, you acknowledge that you have read and understood this Privacy Policy.

@@ -25,24 +25,23 @@ The extension stores only the following preferences locally on your device using
 
 This data:
 - Never leaves your device
-- Is stored only in Chrome's local storage
+- Is stored using Chrome's storage API (`chrome.storage.sync`)
 - Can be cleared by uninstalling the extension
-- Is synced across your devices only if you have Chrome Sync enabled
+- Is synced across your devices by Chrome only if you have Chrome Sync enabled; the extension itself never transmits it
 
 ## Permissions Used
 
 Cache Wipe requires the following permissions to function:
 
 ### Required Permissions:
-- **activeTab**: To identify which tab's cache to clear
+- **activeTab**: To identify which tab's site to clear and reload it, only when you click the icon
 - **browsingData**: To clear cache and cookies for the active tab
-- **tabs**: To reload the tab after clearing cache
 - **storage**: To save your preferences locally
 - **notifications**: To show optional success/error messages
 - **contextMenus**: To provide right-click settings options
 
 ### How Permissions Are Used:
-- **activeTab/tabs**: Only used to get the current tab's URL and reload it
+- **activeTab**: Only used to get the current tab's URL and reload it
 - **browsingData**: Only removes data from the specific domain you're visiting
 - **storage**: Only stores your two preference settings
 - **notifications**: Only displays status messages when enabled
@@ -87,13 +86,6 @@ Website: https://github.com/kelseywhytock
 ## Changes to This Policy
 
 Any changes to this privacy policy will be reflected in the "Last Updated" date. Continued use of the extension after changes constitutes acceptance of the updated policy.
-
-## Compliance
-
-This privacy policy complies with:
-- Chrome Web Store Developer Program Policies
-- General Data Protection Regulation (GDPR)
-- California Consumer Privacy Act (CCPA)
 
 ## User Rights
 

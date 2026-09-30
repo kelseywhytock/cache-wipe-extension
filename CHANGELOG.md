@@ -5,23 +5,40 @@ All notable changes to the Cache Wipe extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-09-23
+## [1.1.1] - 2026-09-30
+
+### Added
+- LICENSE (MIT) - repository is public; without a license others have no right to reuse the code
+- `minimum_chrome_version: 88` in manifest.json
+
+### Changed
+- background.js: only http(s) pages are cleared (allow-list replaces the chrome:/chrome-extension:/about: deny-list; `file://` and other schemes previously failed with a raw error)
+- background.js: badge is now global instead of per-tab, because Chrome resets per-tab badges on reload and the success check mark was likely never visible (untested in-browser)
+- background.js: context menu creation reads stored settings first and uses `removeAll` to avoid duplicates and the create/update race
+- Privacy policy (md + html): storage wording now matches `chrome.storage.sync`; removed unverified GDPR/CCPA compliance claim; updated permission list
+- README: fixed stale install folder name, version, scope ("site/origin", not "tab"), error-handling behavior, privacy and compatibility notes
+
+### Removed
+- `tabs` permission - `activeTab` already grants the URL on icon click and `tabs.reload` needs no permission (reduces the install warning; untested in-browser)
+- `appcache` data type - AppCache has been removed from Chrome
+- No-op "keep service worker alive" activate listener and its console.log
+- `icons/icon.png` (112x112, unreferenced)
+
+## [1.1.0] - 2026-09-30
 
 ### Changed
 - **Redesigned extension icon** - Replaced recycling symbol with clear trash can icon
 - **Improved visual clarity** - New icon immediately communicates cache deletion/clearing
 - **Professional design** - Clean, minimal design suitable for Chrome Web Store
-- **Multiple formats** - Created SVG versions for all required sizes (16px, 48px, 128px)
-
+- **Icon files** - PNGs at 16px, 48px and 128px in `icons/`, plus an `icon.svg` source
 - **Privacy policy** - Developer/contact details updated in PRIVACY_POLICY.md and privacy-policy.html (removed placeholder contacts and prior organization name)
 - **manifest.json** - Version bumped 1.0 → 1.1.0, added `author`
-- **Repository cleanup** - Removed LICENSE (extension is distributed unlisted, not as open source), moved root icons into `icons/`, added .gitignore
+- **Repository cleanup** - Moved root icons into `icons/`, added .gitignore (the original GPLv2 LICENSE was removed here and replaced by MIT in 1.1.1)
 
 ### Technical Details
 - New icon uses universally recognized trash can symbol for deletion
 - Maintained consistent blue (#4285f4) brand color scheme
 - Optimized for visibility at all sizes (16px to 128px)
-- SVG format for crisp rendering and scalability
 
 ## [1.0.0] - 2025-09-23
 

@@ -4,38 +4,29 @@ const DEFAULT_SETTINGS = {
   showNotification: true
 };
 
-// Initialize settings on install
-chrome.runtime.onInstalled.addListener(() => {
-  // Set default settings
-  chrome.storage.sync.get(['includeCookies', 'showNotification'], (result) => {
-    if (result.includeCookies === undefined) {
-      chrome.storage.sync.set(DEFAULT_SETTINGS);
-    }
-  });
-  
-  // Create context menus
-  chrome.contextMenus.create({
-    id: 'toggleCookies',
-    title: 'Also clear cookies',
-    type: 'checkbox',
-    contexts: ['action']
-  });
-  
-  chrome.contextMenus.create({
-    id: 'toggleNotifications',
-    title: 'Show notifications',
-    type: 'checkbox',
-    checked: true,
-    contexts: ['action']
-  });
-  
-  // Set initial checkbox states
-  chrome.storage.sync.get(['includeCookies', 'showNotification'], (result) => {
-    chrome.contextMenus.update('toggleCookies', {
-      checked: result.includeCookies || false
+// Initialize settings and context menus on install/update
+chrome.runtime.onInstalled.addListener(async () => {
+  const stored = await chrome.storage.sync.get(['includeCookies', 'showNotification']);
+  if (stored.includeCookies === undefined && stored.showNotification === undefined) {
+    await chrome.storage.sync.set(DEFAULT_SETTINGS);
+  }
+  const settings = { ...DEFAULT_SETTINGS, ...stored };
+
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: 'toggleCookies',
+      title: 'Also clear cookies',
+      type: 'checkbox',
+      checked: settings.includeCookies,
+      contexts: ['action']
     });
-    chrome.contextMenus.update('toggleNotifications', {
-      checked: result.showNotification !== false
+
+    chrome.contextMenus.create({
+      id: 'toggleNotifications',
+      title: 'Show notifications',
+      type: 'checkbox',
+      checked: settings.showNotification,
+      contexts: ['action']
     });
   });
 });
@@ -53,21 +44,19 @@ chrome.action.onClicked.addListener(async (tab) => {
     const includeCookies = settings.includeCookies || false;
     const showNotification = settings.showNotification !== false; // default true
     
-    // Extract origin from URL
+    // Only http(s) pages have an origin that browsingData can clear
     const url = new URL(tab.url);
-    const origin = url.origin;
-    
-    // Skip chrome:// and other special URLs
-    if (url.protocol === 'chrome:' || url.protocol === 'chrome-extension:' || url.protocol === 'about:') {
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icons/icon-128.png',
         title: 'Cache Wipe',
-        message: 'Cannot clear cache for system pages',
+        message: 'Cache can only be cleared for http(s) pages',
         priority: 1
       });
       return;
     }
+    const origin = url.origin;
     
     // Calculate time range (1 hour ago)
     const oneHourAgo = Date.now() - (60 * 60 * 1000);
@@ -80,14 +69,13 @@ chrome.action.onClicked.addListener(async (tab) => {
     
     // Build data types to remove
     const dataToRemove = {
-      appcache: true,
       cache: true,
       cacheStorage: true,
       cookies: includeCookies
     };
     
     // Show badge to indicate clearing
-    await chrome.action.setBadgeText({ text: '...', tabId: tab.id });
+    await chrome.action.setBadgeText({ text: '...' });
     await chrome.action.setBadgeBackgroundColor({ color: '#0073e6' });
     
     // Clear browsing data
@@ -97,13 +85,13 @@ chrome.action.onClicked.addListener(async (tab) => {
     await chrome.tabs.reload(tab.id);
     
     // Success feedback
-    await chrome.action.setBadgeText({ text: '✓', tabId: tab.id });
+    await chrome.action.setBadgeText({ text: '✓' });
     await chrome.action.setBadgeBackgroundColor({ color: '#4CAF50' });
     
     // Clear badge after 2 seconds
     setTimeout(async () => {
       try {
-        await chrome.action.setBadgeText({ text: '', tabId: tab.id });
+        await chrome.action.setBadgeText({ text: '' });
       } catch (e) {
         // Tab might be closed
       }
@@ -129,13 +117,13 @@ chrome.action.onClicked.addListener(async (tab) => {
     
     // Error feedback
     try {
-      await chrome.action.setBadgeText({ text: '!', tabId: tab.id });
+      await chrome.action.setBadgeText({ text: '!' });
       await chrome.action.setBadgeBackgroundColor({ color: '#F44336' });
       
       // Clear error badge after 3 seconds
       setTimeout(async () => {
         try {
-          await chrome.action.setBadgeText({ text: '', tabId: tab.id });
+          await chrome.action.setBadgeText({ text: '' });
         } catch (e) {
           // Tab might be closed
         }
@@ -162,9 +150,4 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   } else if (info.menuItemId === 'toggleNotifications') {
     chrome.storage.sync.set({ showNotification: info.checked });
   }
-});
-
-// Keep service worker alive
-self.addEventListener('activate', event => {
-  console.log('Cache Wipe service worker activated');
 });

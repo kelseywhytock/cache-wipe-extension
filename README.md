@@ -5,7 +5,7 @@ A one-click Chrome extension that instantly clears cache for the active tab.
 ## Features
 
 - **One-click operation** - Just click the extension icon
-- **Tab-specific clearing** - Only affects the current tab's domain
+- **Site-specific clearing** - Only affects the current tab's site (origin)
 - **Smart feedback** - Badge indicators show progress and status
 - **Optional cookie clearing** - Right-click the icon to toggle
 - **Configurable notifications** - Choose your feedback preference
@@ -17,7 +17,7 @@ A one-click Chrome extension that instantly clears cache for the active tab.
 1. Open Chrome and navigate to `chrome://extensions/`
 2. Enable "Developer mode" (toggle in top right)
 3. Click "Load unpacked"
-4. Select the `cache-cleaner-extension` folder
+4. Select this repository's folder (the one containing `manifest.json`)
 5. The Cache Wipe icon will appear in your toolbar
 
 ## Usage
@@ -25,7 +25,7 @@ A one-click Chrome extension that instantly clears cache for the active tab.
 ### Basic Operation
 Simply click the Cache Wipe icon in your toolbar. The extension will:
 1. Show "..." badge while clearing
-2. Clear cache for the current tab's domain
+2. Clear cache for the current tab's site (origin)
 3. Show "✓" badge on success (or "!" on error)
 4. Reload the tab automatically
 
@@ -43,13 +43,12 @@ Right-click the extension icon to access settings:
 ## Technical Details
 
 ### What Gets Cleared
-- App Cache
 - Browser Cache  
 - Cache Storage
 - Cookies (optional)
 
 ### Scope
-- Only affects the current tab's origin
+- Only affects the current tab's origin (scheme + host + port); other open tabs on that same origin are affected too
 - Only clears data from the past hour
 - Preserves data from other sites
 
@@ -61,10 +60,11 @@ Right-click the extension icon to access settings:
 
 ## Files
 
-- `manifest.json` - Extension configuration (v1.0.0)
+- `manifest.json` - Extension configuration (v1.1.1)
 - `background.js` - Core service worker logic
 - `icons/` - Extension icons (16px, 48px, 128px)
-- `PRIVACY_POLICY.md` - Privacy policy for Chrome Web Store
+- `PRIVACY_POLICY.md` / `privacy-policy.html` - Privacy policy
+- `LICENSE` - MIT license
 - `TESTING_GUIDE.md` - Comprehensive testing instructions
 - `test-page.html` - Manual testing page
 - `CHANGELOG.md` - Version history
@@ -72,15 +72,15 @@ Right-click the extension icon to access settings:
 ## Privacy
 
 This extension:
-- Only clears data for the specific tab
+- Only clears data for the current tab's origin
 - Does not collect or transmit any data
-- Stores preferences locally only
+- Stores two preferences via `chrome.storage.sync` (synced by Chrome only if Chrome Sync is on)
 
 ## Browser Compatibility
 
-- Chrome 88+ (Manifest V3 minimum requirement)
+- Chrome 88+ (Manifest V3 minimum; `minimum_chrome_version` is set to 88)
 - Edge 88+ (Chromium-based)
-- Optimized for Chrome Web Store 2025 requirements
+- Only tested on current Chrome; older versions are unverified
 
 ## Testing
 
@@ -91,8 +91,11 @@ This extension:
 
 ## Error Handling
 
-The extension handles common errors gracefully:
-- Invalid URLs are ignored
-- Protected pages (chrome://) show error badge
-- All errors display clear notifications (if enabled)
-- Service worker failures are logged to console
+- Non-http(s) pages (`chrome://`, `file://`, `about:`, etc.) show a notification and are left untouched
+- If clearing fails, a red "!" badge and an error notification appear
+- Error and system-page notifications are shown even if "Show notifications" is off; that setting only controls the success message
+- Service worker errors are logged to the console
+
+## License
+
+[MIT](LICENSE)
