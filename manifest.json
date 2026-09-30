@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Cache Wipe",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Instantly clear cache for the active tab with one click",
   "author": "Kelsey Whytock",
   "minimum_chrome_version": "88",

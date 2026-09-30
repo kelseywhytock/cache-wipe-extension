@@ -31,10 +31,22 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
+function notifyUnsupportedPage() {
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: 'icons/icon-128.png',
+    title: 'Cache Wipe',
+    message: 'Cache can only be cleared for http(s) pages',
+    priority: 1
+  });
+}
+
 // Handle extension icon click
 chrome.action.onClicked.addListener(async (tab) => {
+  // Without the `tabs` permission, activeTab does not expose the URL of
+  // privileged pages (chrome://, New Tab, etc.), so tab.url is undefined there
   if (!tab || !tab.url) {
-    console.error('No URL found for tab');
+    notifyUnsupportedPage();
     return;
   }
   
@@ -47,13 +59,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     // Only http(s) pages have an origin that browsingData can clear
     const url = new URL(tab.url);
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: 'icons/icon-128.png',
-        title: 'Cache Wipe',
-        message: 'Cache can only be cleared for http(s) pages',
-        priority: 1
-      });
+      notifyUnsupportedPage();
       return;
     }
     const origin = url.origin;
@@ -80,7 +86,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     
     // Clear browsing data
     await chrome.browsingData.remove(removalOptions, dataToRemove);
-    
+
     // Reload the tab
     await chrome.tabs.reload(tab.id);
     

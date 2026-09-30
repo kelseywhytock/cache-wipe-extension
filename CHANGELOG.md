@@ -5,6 +5,16 @@ All notable changes to the Cache Wipe extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-09-30
+
+### Fixed
+- background.js: clicking the icon on privileged pages (`chrome://`, New Tab, etc.) now shows the "http(s) pages only" notification. Since 1.1.1 removed the `tabs` permission, `activeTab` leaves `tab.url` undefined on those pages, and the old code only logged to the console, so the click appeared to do nothing (untested in-browser)
+
+### Changed
+- background.js: extracted `notifyUnsupportedPage()` so the missing-URL and non-http(s) cases share one notification
+- manifest.json: version 1.1.1 -> 1.1.2
+- README: error-handling note and Files version updated
+
 ## [1.1.1] - 2026-09-30
 
 ### Added

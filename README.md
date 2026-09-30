@@ -60,7 +60,7 @@ Right-click the extension icon to access settings:
 
 ## Files
 
-- `manifest.json` - Extension configuration (v1.1.1)
+- `manifest.json` - Extension configuration (v1.1.2)
 - `background.js` - Core service worker logic
 - `icons/` - Extension icons (16px, 48px, 128px)
 - `PRIVACY_POLICY.md` / `privacy-policy.html` - Privacy policy
@@ -91,7 +91,7 @@ This extension:
 
 ## Error Handling
 
-- Non-http(s) pages (`chrome://`, `file://`, `about:`, etc.) show a notification and are left untouched
+- Non-http(s) pages (`chrome://`, `file://`, `about:`, New Tab, etc.) show a notification and are left untouched, including pages where Chrome hides the URL from the extension
 - If clearing fails, a red "!" badge and an error notification appear
 - Error and system-page notifications are shown even if "Show notifications" is off; that setting only controls the success message
 - Service worker errors are logged to the console
