@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cache Wipe Test Page</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #f0f0f0;
+        }
+        .cached { background: #e8f5e8; }
+        .fresh { background: #fff3cd; }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cache Wipe Test Page</h1>
+
+    <div class="status" id="page-load-info">
+        <strong>Page loaded at:</strong> <span id="load-time"></span><br>
+        <strong>Navigation type:</strong> <span id="nav-type"></span>
+    </div>
+
+    <div class="status" id="resource-info">
+        <strong>Resource Cache Status:</strong>
+        <div id="resource-list"></div>
+    </div>
+
+    <h2>Test Resources</h2>
+    <p>These resources help test cache clearing:</p>
+
+    <!-- Test image with cache-busting parameter -->
+    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNDI4NWY0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5UZXN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="Test Image">
+
+    <h2>Instructions</h2>
+    <ol>
+        <li>Load this page and note the cache status above</li>
+        <li>Refresh the page (Ctrl/Cmd+R) - resources should show as cached</li>
+        <li>Click the Cache Wipe extension icon</li>
+        <li>Check if resources now show as "FRESH" instead of "CACHED"</li>
+        <li>Open Chrome DevTools (F12) → Network tab for more detailed analysis</li>
+    </ol>
+
+    <h2>DevTools Testing</h2>
+    <p>For the most reliable test:</p>
+    <ol>
+        <li>Open Chrome DevTools (F12)</li>
+        <li>Go to Network tab</li>
+        <li>Refresh this page</li>
+        <li>Note resources showing "(from cache)" or "(disk cache)"</li>
+        <li>Click Cache Wipe extension</li>
+        <li>All resources should now show actual sizes, not cached indicators</li>
+    </ol>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display load time
+            document.getElementById('load-time').textContent = new Date().toISOString();
+
+            // Check navigation type
+            const nav = performance.getEntriesByType('navigation')[0];
+            let navType = 'Unknown';
+            if (nav) {
+                navType = nav.type || 'navigate';
+            }
+            document.getElementById('nav-type').textContent = navType;
+
+            // Check resource cache status
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const resourceList = document.getElementById('resource-list');
+                    const entries = performance.getEntriesByType('resource');
+
+                    if (entries.length === 0) {
+                        resourceList.innerHTML = '<div>No external resources loaded</div>';
+                        return;
+                    }
+
+                    let html = '';
+                    entries.forEach(function(entry) {
+                        // Check if resource was cached
+                        const wasCached = entry.transferSize === 0 && entry.decodedBodySize > 0;
+                        const status = wasCached ? 'CACHED' : 'FRESH';
+                        const statusClass = wasCached ? 'cached' : 'fresh';
+
+                        html += '<div class="' + statusClass + '">' +
+                                '<strong>' + entry.name.split('/').pop() + ':</strong> ' +
+                                status + ' (transfer: ' + entry.transferSize + ' bytes, decoded: ' +
+                                entry.decodedBodySize + ' bytes)</div>';
+                    });
+
+                    resourceList.innerHTML = html;
+                }, 100); // Small delay to ensure all resources are loaded
+            });
+        });
+
+        // Log cache status to console as well
+        console.log('Cache Wipe Test Page loaded at:', new Date().toISOString());
+
+        window.addEventListener('load', function() {
+            console.log('=== Resource Cache Analysis ===');
+            const entries = performance.getEntriesByType('resource');
+            entries.forEach(function(entry) {
+                const wasCached = entry.transferSize === 0 && entry.decodedBodySize > 0;
+                console.log(entry.name + ': ' + (wasCached ? 'CACHED' : 'FRESH'));
+            });
+        });
+    </script>
+</body>
+</html>

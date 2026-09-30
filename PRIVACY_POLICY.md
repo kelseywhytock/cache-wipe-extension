@@ -1,6 +1,6 @@
 # Privacy Policy for Cache Wipe
 
-**Last Updated: July 17, 2025**
+**Last Updated: September 30, 2026**
 
 ## Overview
 
@@ -80,9 +80,9 @@ This extension does not knowingly collect any information from children under 13
 
 For questions about this privacy policy or the extension, contact:
 
-**Kelsey Whytock**  
-Email: kewhytock@gmail.com  
-Website: [Your website]
+**Kelsey Whytock**
+Email: kewhytock@gmail.com
+Website: https://github.com/kelseywhytock
 
 ## Changes to This Policy
 

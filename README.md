@@ -1,5 +1,4 @@
 # Cache Wipe Chrome Extension
-https://chromewebstore.google.com/detail/cache-wipe/mlfolhfffnjjldgphifngjabjlnhhmin?authuser=0&hl=en
 
 A one-click Chrome extension that instantly clears cache for the active tab.
 
@@ -62,9 +61,13 @@ Right-click the extension icon to access settings:
 
 ## Files
 
-- `manifest.json` - Extension configuration
+- `manifest.json` - Extension configuration (v1.0.0)
 - `background.js` - Core service worker logic
-- `icon.png` - Extension icon
+- `icons/` - Extension icons (16px, 48px, 128px)
+- `PRIVACY_POLICY.md` - Privacy policy for Chrome Web Store
+- `TESTING_GUIDE.md` - Comprehensive testing instructions
+- `test-page.html` - Manual testing page
+- `CHANGELOG.md` - Version history
 
 ## Privacy
 
@@ -75,12 +78,21 @@ This extension:
 
 ## Browser Compatibility
 
-- Chrome 93+ (Manifest V3 with service workers)
-- Edge 93+ (Chromium-based)
+- Chrome 88+ (Manifest V3 minimum requirement)
+- Edge 88+ (Chromium-based)
+- Optimized for Chrome Web Store 2025 requirements
+
+## Testing
+
+1. Open `test-page.html` in Chrome
+2. Load the extension in developer mode
+3. Follow testing instructions in `TESTING_GUIDE.md`
+4. Use Chrome DevTools Network tab for verification
 
 ## Error Handling
 
 The extension handles common errors gracefully:
 - Invalid URLs are ignored
-- Protected pages show error badge
+- Protected pages (chrome://) show error badge
 - All errors display clear notifications (if enabled)
+- Service worker failures are logged to console

@@ -1,0 +1,21 @@
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue circular background -->
+  <circle cx="64" cy="64" r="56" fill="#4285f4"/>
+
+  <!-- Trash can icon - universal symbol for deletion/clearing -->
+  <g fill="#ffffff">
+    <!-- Trash can lid -->
+    <rect x="40" y="45" width="48" height="6" rx="3"/>
+
+    <!-- Trash can body -->
+    <rect x="44" y="51" width="40" height="36" rx="4"/>
+
+    <!-- Trash can handle -->
+    <rect x="56" y="40" width="16" height="5" rx="2.5" fill="none" stroke="#ffffff" stroke-width="3"/>
+
+    <!-- Vertical lines inside trash can -->
+    <rect x="52" y="58" width="2" height="22" rx="1"/>
+    <rect x="63" y="58" width="2" height="22" rx="1"/>
+    <rect x="74" y="58" width="2" height="22" rx="1"/>
+  </g>
+</svg>
