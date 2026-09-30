@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `appcache` data type - AppCache has been removed from Chrome
 - No-op "keep service worker alive" activate listener and its console.log
 - `icons/icon.png` (112x112, unreferenced)
+- `screenshots/screenshot.jpg` (showed the pre-1.1.0 recycling icon and was unreferenced)
 
 ## [1.1.0] - 2026-09-30
 
